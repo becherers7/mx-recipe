@@ -1,23 +1,25 @@
-import React from 'react';
-import './App.css';
-import RecipeMeta from './Components/RecipeMeta';
-import RecipeIngredients from './Components/RecipeIngredients';
-import RecipeSteps from './Components/RecipeSteps';
-import recipeData from './recipeData'
+import React, { useContext, useState } from "react";
+import "./App.css";
+import recipeContext from "./context/recipe/recipeContext";
+import RecipeList from "./pages/RecipeList";
+import Recipe from "./pages/Recipe";
 
 function App() {
-
-  const recipe = recipeData()
-
+  const { recipes, selectedRecipe, selectRecipe } = useContext(recipeContext);
+  const [showRecipe, setShow] = useState(false);
+  const handleRecipeClick = (index) => {
+    setShow(true);
+    selectRecipe(recipes[index]);
+  };
   return (
     <div className="App">
-      <RecipeMeta 
-        title={recipe.title} 
-        time={recipe.timeToMake} 
-        servings={recipe.servings} 
+      <RecipeList
+        handleRecipeClick={handleRecipeClick}
+        recipes={recipes}
+        selectRecipe={selectRecipe}
+        setShow={setShow}
       />
-      <RecipeIngredients ingredients={recipe.ingredients} />
-      <RecipeSteps steps={recipe.steps} /> 
+      {showRecipe && <Recipe selectedRecipe={selectedRecipe} />}
     </div>
   );
 }
